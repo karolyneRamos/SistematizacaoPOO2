@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Contatos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: inline-block;
+            width: 70px;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: calc(100% - 80px);
+            padding: 5px;
+        }
+
+        .button-group {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-group button:hover {
+            background-color: #ddd;
+        }
+
+        .contact-list {
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Lista de Contatos</h1>
+
+    <!-- Formulário de Adição de Contato -->
+    <h2>Adicionar Novo Contato</h2>
+    <div class="form-group">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" required />
+    </div>
+    <div class="form-group">
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" required />
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required />
+    </div>
+
+    <!-- Nova Barra de Pesquisa -->
+    <div class="form-group">
+        <label for="query">Pesquisar:</label>
+        <input type="text" id="query" />
+    </div>
+
+    <div class="button-group">
+        <button type="button" onclick="adicionarContato()">Adicionar Contato</button>
+        <button type="button" onclick="pesquisarContato()">Pesquisar Contato</button>
+        <button type="button" onclick="removerContato()">Remover Contato</button>
+        <button type="button" onclick="listarContatos()">Listar Contatos</button>
+        <button type="button" onclick="sair()">Sair</button>
+    </div>
+
+    <!-- Lista de Contatos -->
+    <div id="contact-list" class="contact-list"></div>
+</div>
+
+<script>
+    const contatos = [];
+
+    function adicionarContato() {
+        const nome = document.getElementById('nome').value;
+        const telefone = document.getElementById('telefone').value;
+        const email = document.getElementById('email').value;
+
+        if (nome && telefone && email) {
+            const contato = { nome, telefone, email };
+            contatos.push(contato);
+            console.log('Contato adicionado:', contato);
+            // Não mostrar a lista imediatamente após adicionar.
+        } else {
+            alert('Por favor, preencha todos os campos.');
+        }
+    }
+
+    function pesquisarContato() {
+        const query = document.getElementById('query').value;
+        const resultado = contatos.filter(c => c.nome.includes(query) || c.telefone.includes(query));
+        console.log('Resultado da pesquisa:', resultado);
+        listarContatos(resultado);
+    }
+
+    function removerContato() {
+        const nome = document.getElementById('nome').value;
+        const index = contatos.findIndex(c => c.nome === nome);
+        if (index !== -1) {
+            contatos.splice(index, 1);
+            console.log('Contato removido:', nome);
+            listarContatos(); // Atualiza a lista após remoção
+        } else {
+            alert('Contato não encontrado.');
+        }
+    }
+
+    function listarContatos(lista = contatos) {
+        const listaContatos = document.getElementById('contact-list');
+        listaContatos.innerHTML = '';
+        lista.forEach(contato => {
+            const div = document.createElement('div');
+            div.className = 'contact-item';
+            div.innerHTML = `
+                <p><strong>Nome:</strong> ${contato.nome}</p>
+                <p><strong>Telefone:</strong> ${contato.telefone}</p>
+                <p><strong>Email:</strong> ${contato.email}</p>
+            `;
+            listaContatos.appendChild(div);
+        });
+    }
+
+    function sair() {
+        console.log('Saindo...');
+        // Adicione a lógica de sair aqui, se necessário.
+    }
+</script>
+</body>
+</html>
